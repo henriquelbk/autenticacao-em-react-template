@@ -1,9 +1,10 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import useForms from '../../hooks/useForms'
-
 import { ContainerForm, ContainerLogin, Input } from './styled'
-import { irParaCadastro } from '../../routes/coordinator'
+import { irParaCadastro, irParaFeed } from '../../routes/coordinator'
+import { BASE_URL } from '../../constants/BASE_URL'
+import axios from 'axios'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -13,6 +14,24 @@ export default function Login() {
   const enviaLogin = (e) => {
     e.preventDefault()
     console.log(form)
+
+    // Exercicios da aula
+
+    const body = {
+      email: form.email,
+      password: form.password,
+    }
+
+    axios.post(`${BASE_URL}/users/login`, body)
+    .then((resp) => {
+      console.log(resp.data.token)
+      localStorage.setItem('token', resp.data.token)
+      irParaFeed(navigate)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+
   }
 
   return (
